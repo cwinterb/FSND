@@ -57,18 +57,23 @@
 </div>
 <section>
   <h2 class="monospace">
-    {{ venue.upcoming_shows_count }} Upcoming {% if venue.upcoming_shows_count
-    == 1 %}Show{% else %}Shows{% endif %}
+    {{ future_shows | length }} Upcoming {% if future_shows | length == 1
+    %}Show{% else %}Shows{% endif %}
   </h2>
   <div class="row">
-    {%for show in venue.upcoming_shows %}
+    {%for future_show in future_shows %}
     <div class="col-sm-4">
       <div class="tile tile-show">
-        <img src="{{ show.artist_image_link }}" alt="Show Artist Image" />
+        <img
+          src="{{ future_show.artist.image_link }}"
+          alt="Show Artist Image"
+        />
         <h5>
-          <a href="/artists/{{ show.artist_id }}">{{ show.artist_name }}</a>
+          <a href="/artists/{{ future_show.artist.id }}">{{
+            future_show.artist.name
+          }}</a>
         </h5>
-        <h6>{{ show.start_time|datetime('full') }}</h6>
+        <h6>{{ future_show.time }}</h6>
       </div>
     </div>
     {% endfor %}
@@ -76,22 +81,29 @@
 </section>
 <section>
   <h2 class="monospace">
-    {{ venue.past_shows_count }} Past {% if venue.past_shows_count == 1 %}Show{%
-    else %}Shows{% endif %}
+    {{ past_shows | length }} Past {% if past_shows | length == 1 %}Show{% else
+    %}Shows{% endif %}
   </h2>
   <div class="row">
-    {%for show in venue.past_shows %}
+    {%for past_show in past_shows %}
     <div class="col-sm-4">
       <div class="tile tile-show">
-        <img src="{{ show.artist_image_link }}" alt="Show Artist Image" />
+        <img src="{{ past_show.artist.image_link }}" alt="Show Artist Image" />
         <h5>
-          <a href="/artists/{{ show.artist_id }}">{{ show.artist_name }}</a>
+          <a href="/artists/{{ past_show.artist.id }}">{{
+            past_show.artist.name
+          }}</a>
         </h5>
-        <h6>{{ show.start_time|datetime('full') }}</h6>
+        <h6>{{ past_show.time }}</h6>
       </div>
     </div>
     {% endfor %}
   </div>
+</section>
+<section>
+  <form action="{{ url_for('edit_venue', venue_id = venue.id) }}" method="GET">
+    <input type="submit" class="btn btn-success" value="Edit Venue" />
+  </form>
 </section>
 <section>
   <form
