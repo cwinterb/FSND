@@ -48,6 +48,7 @@ class Venue(db.Model):
                            default=default_venue_img)
     facebook_link = db.Column(db.String(120), nullable=True)
     seeking_talent = db.Column(db.Boolean, default=False)
+    seeking_talent_description = db.Column(db.String(500), nullable=True)
     genres = db.Column(db.ARRAY(db.String(120)), nullable=True)
     shows = db.relationship("Show", backref='venue')
 
@@ -63,15 +64,16 @@ class Artist(db.Model):
     state = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(120), nullable=False)
     genres = db.Column(db.ARRAY(db.String(120)), nullable=True)
-    image_link = db.Column(db.String(500), nullable=False)
-    website_link = db.Column(db.String(500), nullable=False)
+    image_link = db.Column(db.String(500), nullable=True)
+    website_link = db.Column(db.String(500), nullable=True)
     facebook_link = db.Column(db.String(500), nullable=False)
-    seeking_venues = db.Column(db.Boolean, nullable=False, default=False)
+    seeking_venues = db.Column(db.Boolean, nullable=True, default=False)
+    seeking_venues_description = db.Column(db.String(500), nullable=True)
     shows = db.relationship("Show", backref='artist')
 
     # DONE: implement any missing fields, as a database migration using Flask-Migrate
 
-# DONE: Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
+    # DONE: Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 
 
 class Show(db.Model):
@@ -80,14 +82,6 @@ class Show(db.Model):
     venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'))
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-# show = db.Table('show',
-#                 db.Column('venue_id', db.Integer, db.ForeignKey(
-#                     'venue.id'), primary_key=True),
-#                 db.Column('artist_id', db.Integer, db.ForeignKey(
-#                     'artist.id'), primary_key=True),
-#                 db.Column('time', db.DateTime, nullable=False,
-#                           default=datetime.utcnow))
 
 
 db.create_all()
@@ -124,7 +118,7 @@ def index():
 @app.route('/venues')
 def venues():
     # DONE: replace with real venues data.
-    # TODO: num_shows should be aggregated based on number of upcoming shows per venue.
+    # DONE: num_shows should be aggregated based on number of upcoming shows per venue.
     return render_template('pages/venues.html', venues=Venue.query.all())
 
 
@@ -135,7 +129,6 @@ def search_venues():
     # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
     search_term = request.form.get('search_term', '').capitalize()
     response = Venue.query.filter(Venue.name.contains(search_term)).all()
-    print(response)
     return render_template('pages/search_venues.html',
                            results=response,
                            search_term=search_term)
@@ -151,8 +144,6 @@ def show_venue(venue_id):
     time = datetime.now()
     future_shows = show_query.filter(Show.time >= time).all()
     past_shows = show_query.filter(Show.time < time).all()
-    print(future_shows)
-    print(past_shows)
     return render_template('pages/show_venue.html', venue=venue_query, past_shows=past_shows, future_shows=future_shows)
 
 #  Create Venue
@@ -224,7 +215,6 @@ def search_artists():
     # search for "band" should return "The Wild Sax Band".
     search_term = request.form.get('search_term', '').capitalize()
     response = Artist.query.filter(Artist.name.contains(search_term)).all()
-    print(response)
     return render_template('pages/search_artists.html',
                            results=response,
                            search_term=search_term)
@@ -240,8 +230,6 @@ def show_artist(artist_id):
     time = datetime.now()
     future_shows = show_query.filter(Show.time >= time).all()
     past_shows = show_query.filter(Show.time < time).all()
-    for s in future_shows:
-        print(s.__dict__)
     return render_template('pages/show_artist.html',
                            artist=artist_query, future_shows=future_shows,
                            past_shows=past_shows)
@@ -320,10 +308,9 @@ def create_artist_form():
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
     # called upon submitting the new artist listing form
-    # TODO: insert form data as a new Venue record in the db, instead
-    # TODO: modify data to be the data object returned from db insertion
+    # DONE: insert form data as a new Venue record in the db, instead
+    # DONE: modify data to be the data object returned from db insertion
     try:
-        print("here - 1")
         name = request.form.get("name")
         city = request.form.get("city")
         state = request.form.get("state")
@@ -333,9 +320,6 @@ def create_artist_submission():
         artist = Artist(name=name, city=city, state=state,
                         phone=phone, genres=genres, facebook_link=facebook_link)
         db.session.add(artist)
-        print(artist.name, artist.city, artist.state,
-              artist.phone, artist.genres, artist.facebook_link)
-        print(request.form)
         db.session.commit()
         # on successful db insert, flash success
         flash('Artist ' + request.form['name'] + ' was successfully listed!')
