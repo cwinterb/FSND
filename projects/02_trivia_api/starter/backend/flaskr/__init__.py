@@ -1,10 +1,10 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, redirect, url_for, json
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
 
-from models import setup_db, Question, Category
+from models import setup_db, Question, Category, db
 
 QUESTIONS_PER_PAGE = 10
 
@@ -32,17 +32,109 @@ def create_app(test_config=None):
             questions = Question.query.all()
             categories = Category.query.all()
             formatted_questions = [question.format() for question in questions]
-            formatted_categories = [
-                category.format() for category in categories]
-            print(formatted_categories)
-            print(formatted_questions)
+            formatted_categories = {}
+            for category in categories:
+                formatted_categories[category.__dict__[
+                    'id']] = category.__dict__['type']
             return jsonify({
                 'success': True,
                 'questions': formatted_questions[start: end],
                 'total_questions': len(formatted_questions),
                 'categories': formatted_categories
             })
+        if (request.method == 'POST' and request.args.get('search_term') is not None):
+            search_term = request.args.get('search_term')
+            response = Question.query.filter(
+                Question.question.contains(search_term)).all()
+            response_formatted = [question.format() for question in response]
+            total_questions = len(response)
+            current_category = []
+            for question in response_formatted:
+                current_category.append(question['category'])
+            return jsonify({
+                'success': True,
+                'questions': response_formatted,
+                'total_questions': total_questions,
+                'current_cateogry': current_category
+            })
 
+        if request.method == 'POST':
+            try:
+                question = request.args.get('question')
+                answer = request.args.get('answer')
+                difficulty = request.args.get('difficulty')
+                category = request.args.get('category')
+                new_question = Question(
+                    question=question, answer=answer, difficulty=difficulty, category=category)
+                db.session.add(new_question)
+                db.session.commit()
+            except:
+                db.session.rollback()
+            finally:
+                db.session.close()
+                return jsonify({
+                    'success': True
+                })
+
+    @app.route('/questions/<int:question_id>', methods=['DELETE'])
+    def delete_question(question_id):
+        try:
+            question = Question.query.get_or_404(question_id)
+            db.session.delete(question)
+            db.session.commit()
+        except:
+            db.session.rollback()
+        finally:
+            db.session.close()
+            return jsonify({
+                'success': True
+            })
+
+    @app.route('/categories', methods=['GET'])
+    def get_categories():
+        if request.method == 'GET':
+            categories = Category.query.all()
+            formatted_categories = {}
+            for category in categories:
+                formatted_categories[category.__dict__[
+                    'id']] = category.__dict__['type']
+            return jsonify({
+                'success': True,
+                'categories': formatted_categories
+            })
+
+    @app.route('/categories/<int:category_id>/questions', methods=['GET'])
+    def get_questions_by_category(category_id):
+        query = Question.query.filter_by(category=category_id).all()
+        response = [question.format() for question in query]
+        total_questions = len(response)
+        return jsonify({
+            'success': True,
+            'questions': response,
+            'total_questions': total_questions,
+            'current_category': category_id})
+
+    @app.route('/quizzes', methods=["POST"])
+    def quiz():
+        quiz_category = request.args.get('quiz_category')
+        previous_questions = request.args.get('prev_questions')
+        print(previous_questions)
+        category_length = len(Question.query.filter_by(
+            category=quiz_category).all())
+        rand = random.randint(1, category_length)
+        # rand_question = Question.query.filter(
+        #     Question.category == quiz_category).all()[rand - 1].format()
+        cat_questions = Question.query.filter(
+            Question.category == quiz_category)
+        rand_question = cat_questions.filter(
+            Question.id not in previous_questions).all().random().format()
+        print(rand_question)
+        previous_questions.join(rand_question)
+        print(previous_questions)
+        return jsonify({
+            'question': rand_question,
+            'previous_questions': previous_questions
+        })
     return app
 
 
@@ -55,7 +147,7 @@ def create_app(test_config=None):
   '''
 
 '''
-      @TODO:
+      @DONE:
       Create an endpoint to handle GET requests
       for all available categories.
       '''
@@ -74,7 +166,7 @@ def create_app(test_config=None):
   '''
 
 '''
-  @TODO:
+  @DONE:
   Create an endpoint to DELETE question using a question ID.
 
   TEST: When you click the trash icon next to a question, the question will be removed.
@@ -82,7 +174,7 @@ def create_app(test_config=None):
   '''
 
 '''
-  @TODO:
+  @DONE:
   Create an endpoint to POST a new question,
   which will require the question and answer text,
   category, and difficulty score.
@@ -93,7 +185,7 @@ def create_app(test_config=None):
   '''
 
 '''
-  @TODO:
+  @DONE:
   Create a POST endpoint to get questions based on a search term.
   It should return any questions for whom the search term
   is a substring of the question.
@@ -104,7 +196,7 @@ def create_app(test_config=None):
   '''
 
 '''
-  @TODO:
+  @DONE:
   Create a GET endpoint to get questions based on category.
 
   TEST: In the "List" tab / main screen, clicking on one of the
@@ -122,7 +214,7 @@ def create_app(test_config=None):
   TEST: In the "Play" tab, after a user selects "All" or a category,
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not.
-  '''
+'''
 
 '''
   @TODO:
