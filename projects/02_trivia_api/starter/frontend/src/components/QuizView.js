@@ -94,7 +94,7 @@ class QuizView extends Component {
   restartGame = () => {
     this.setState({
       quizCategory: null,
-      previousQuestions: [],
+      previousQuestions: [0],
       showAnswer: false,
       numCorrect: 0,
       currentQuestion: {},

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort, jsonify, redirect, url_for, json
+from flask import Flask, request, abort, jsonify, redirect, url_for, json, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
@@ -117,23 +117,30 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=["POST"])
     def quiz():
         quiz_category = request.args.get('quiz_category')
+        print("quiz_category = ", quiz_category)
         previous_questions = request.args.get('prev_questions').split(',')
-        # previous_questions.pop(0)
-        print(previous_questions)
+        print("previous_questions = ", previous_questions)
         prev_questions = [int(q) for q in previous_questions]
-        print(prev_questions)
+        print("prev_questions = ", previous_questions)
         cat_questions = Question.query.filter(
             Question.category == quiz_category)
-        rand_question = cat_questions.filter(
-            ~ Question.id.in_(previous_questions)).first().format()
-        print(rand_question)
-        prev_questions.append(rand_question['id'])
-        print(prev_questions)
-
+        print("cat_questions = ", cat_questions)
+        next_question = (cat_questions.filter(
+            ~ Question.id.in_(previous_questions)).first())
+        print("next_question = ", next_question)
+        if next_question is None:
+            current_question = False
+        else:
+            current_question = next_question.format()
+            prev_questions.append(current_question['id'])
+        print("current_question = ", current_question)
+        print("prev_questions = ", prev_questions)
+        print("end of question ---------")
         return jsonify({
-            'question': rand_question,
+            'question': current_question,
             'previous_questions': prev_questions
         })
+
     return app
 
 
