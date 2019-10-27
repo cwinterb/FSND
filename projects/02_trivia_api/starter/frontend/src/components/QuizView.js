@@ -10,7 +10,7 @@ class QuizView extends Component {
     super();
     this.state = {
       quizCategory: null,
-      previousQuestions: [],
+      previousQuestions: [0],
       showAnswer: false,
       categories: {},
       numCorrect: 0,

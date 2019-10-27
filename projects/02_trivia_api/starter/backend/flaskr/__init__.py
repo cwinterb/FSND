@@ -117,23 +117,22 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=["POST"])
     def quiz():
         quiz_category = request.args.get('quiz_category')
-        previous_questions = request.args.get('prev_questions')
+        previous_questions = request.args.get('prev_questions').split(',')
+        # previous_questions.pop(0)
         print(previous_questions)
-        category_length = len(Question.query.filter_by(
-            category=quiz_category).all())
-        rand = random.randint(1, category_length)
-        # rand_question = Question.query.filter(
-        #     Question.category == quiz_category).all()[rand - 1].format()
+        prev_questions = [int(q) for q in previous_questions]
+        print(prev_questions)
         cat_questions = Question.query.filter(
             Question.category == quiz_category)
         rand_question = cat_questions.filter(
-            Question.id not in previous_questions).all().random().format()
+            ~ Question.id.in_(previous_questions)).first().format()
         print(rand_question)
-        previous_questions.join(rand_question)
-        print(previous_questions)
+        prev_questions.append(rand_question['id'])
+        print(prev_questions)
+
         return jsonify({
             'question': rand_question,
-            'previous_questions': previous_questions
+            'previous_questions': prev_questions
         })
     return app
 
