@@ -122,8 +122,12 @@ def create_app(test_config=None):
         print("previous_questions = ", previous_questions)
         prev_questions = [int(q) for q in previous_questions]
         print("prev_questions = ", previous_questions)
-        cat_questions = Question.query.filter(
-            Question.category == quiz_category)
+        if int(quiz_category) > 0:
+            cat_questions = Question.query.filter(
+                Question.category == quiz_category)
+        else:
+            cat_questions = Question.query
+            print(len(cat_questions.all()))
         print("cat_questions = ", cat_questions)
         next_question = (cat_questions.filter(
             ~ Question.id.in_(previous_questions)).first())
@@ -159,7 +163,7 @@ def create_app(test_config=None):
       '''
 
 '''
-  @TODO:
+  @DONE:
   Create an endpoint to handle GET requests for questions,
   including pagination (every 10 questions).
   This endpoint should return a list of questions,
@@ -211,7 +215,7 @@ def create_app(test_config=None):
   '''
 
 '''
-  @TODO:
+  @DONE:
   Create a POST endpoint to get questions to play the quiz.
   This endpoint should take category and previous question parameters
   and return a random questions within the given category,
