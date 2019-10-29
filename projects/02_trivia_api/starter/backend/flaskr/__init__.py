@@ -72,8 +72,7 @@ def create_app(test_config=None):
                 category = request.args.get('category')
                 new_question = Question(
                     question=question, answer=answer, difficulty=difficulty, category=category)
-                db.session.add(new_question)
-                db.session.commit()
+                Question.insert(new_question)
             except:
                 db.session.rollback()
                 abort(422)
@@ -87,8 +86,7 @@ def create_app(test_config=None):
     def delete_question(question_id):
         try:
             question = Question.query.get_or_404(question_id)
-            db.session.delete(question)
-            db.session.commit()
+            Question.delete(question)
         except:
             db.session.rollback()
         finally:
@@ -261,7 +259,7 @@ def create_app(test_config=None):
 '''
 
 '''
-  @TODO:
+  @DONE:
   Create error handlers for all expected errors
   including 404 and 422.
   '''
