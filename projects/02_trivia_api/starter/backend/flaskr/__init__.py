@@ -27,6 +27,7 @@ def create_app(test_config=None):
     def get_questions():
         if request.method == 'GET':
             page = request.args.get('page', 1, type=int)
+            print(page)
             start = (page - 1) * QUESTIONS_PER_PAGE
             end = start + QUESTIONS_PER_PAGE
             questions = Question.query.all()
@@ -78,9 +79,7 @@ def create_app(test_config=None):
                 abort(422)
             finally:
                 db.session.close()
-                return jsonify({
-                    'success': True
-                })
+                return jsonify({'question': question, 'answer': answer, 'difficulty': difficulty, 'category': category})
 
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
