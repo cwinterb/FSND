@@ -25,6 +25,7 @@ def create_app(test_config=None):
 
     @app.route('/questions', methods=['GET', 'POST'])
     def get_questions():
+        # unit tests done
         if request.method == 'GET':
             page = request.args.get('page', 1, type=int)
             print(page)
@@ -47,6 +48,7 @@ def create_app(test_config=None):
                 'total_questions': len(formatted_questions),
                 'categories': formatted_categories
             })
+        # unit tests done
         if (request.method == 'POST' and request.args.get('search_term') is not None):
             search_term = request.args.get('search_term')
             response = Question.query.filter(
@@ -81,6 +83,7 @@ def create_app(test_config=None):
                 db.session.close()
                 return jsonify({'question': question, 'answer': answer, 'difficulty': difficulty, 'category': category})
 
+    # unit tests done
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
         try:
@@ -94,6 +97,7 @@ def create_app(test_config=None):
                 'success': True
             })
 
+    # unit tests done
     @app.route('/categories', methods=['GET'])
     def get_categories():
         if request.method == 'GET':
@@ -109,6 +113,7 @@ def create_app(test_config=None):
                 'categories': formatted_categories
             })
 
+    # unit tests done
     @app.route('/categories/<int:category_id>/questions', methods=['GET'])
     def get_questions_by_category(category_id):
         query = Question.query.filter_by(category=category_id).all()
