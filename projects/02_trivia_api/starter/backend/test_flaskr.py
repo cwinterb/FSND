@@ -55,12 +55,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(question['difficulty'], 5)
         self.assertTrue(question)
 
-    def test_post_unprocessable(self):
-        bad_quest = 5
-        res = self.client().post(f'/questions?question={bad_quest}')
-        question = Question.query.order_by(Question.id.desc()).first().__dict__
-        self.assertEqual(res.status_code, 422)
-
     def test_question_search(self):
         search_term = 'country'
         res = self.client().post(f'/questions?search_term={search_term}')
@@ -113,6 +107,22 @@ class TriviaTestCase(unittest.TestCase):
         res = self.client().get(f'/categories/{category_id}/questions')
         data = json.loads(res.data)
         self.assertEqual(data['error'], 404)
+
+    def test_quiz(self):
+        quiz_category = 1
+        prev_questions = 0
+        res = self.client().post(
+            f'/quizzes?quiz_category={quiz_category}&prev_questions={prev_questions}')
+        data = json.loads(res.data)
+        self.assertTrue(data['question']['category'] == 1)
+
+    def test_quiz_failure(self):
+        prev_questions = None
+        res = self.client().post(
+            f'/quizzes?quiz_category=1&prev_questions={prev_questions}')
+        data = json.loads(res.data)
+        self.assertFalse(data['success'])
+
     """
     TODO
     Write at least one test for each test for successful operation and for expected errors.
