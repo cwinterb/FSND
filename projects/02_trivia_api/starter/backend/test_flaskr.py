@@ -50,8 +50,10 @@ class TriviaTestCase(unittest.TestCase):
         difficulty = 5
         category = 3
         res = self.client().post(
-            f'/questions?question={quest}&answer={answer}&difficulty={difficulty}&category={category}')
+            f'''/questions?question={quest}&answer={answer}
+            &difficulty={difficulty}&category={category}''')
         question = Question.query.order_by(Question.id.desc()).first().__dict__
+        print(question)
         self.assertEqual(question['difficulty'], 5)
         self.assertTrue(question)
 
@@ -73,7 +75,8 @@ class TriviaTestCase(unittest.TestCase):
         difficulty = 5
         category = 3
         self.client().post(
-            f'/questions?question={quest}&answer={answer}&difficulty={difficulty}&category={category}')
+            f'''/questions?question={quest}&answer={answer}
+            &difficulty={difficulty}&category={category}''')
         question = Question.query.order_by(Question.id.desc()).first().__dict__
         id = question['id']
         self.client().delete(f'/questions/{id}')
@@ -112,7 +115,8 @@ class TriviaTestCase(unittest.TestCase):
         quiz_category = 1
         prev_questions = 0
         res = self.client().post(
-            f'/quizzes?quiz_category={quiz_category}&prev_questions={prev_questions}')
+            f'''/quizzes?quiz_category={quiz_category}
+            &prev_questions={prev_questions}''')
         data = json.loads(res.data)
         self.assertTrue(data['question']['category'] == 1)
 
@@ -122,11 +126,6 @@ class TriviaTestCase(unittest.TestCase):
             f'/quizzes?quiz_category=1&prev_questions={prev_questions}')
         data = json.loads(res.data)
         self.assertFalse(data['success'])
-
-    """
-    TODO
-    Write at least one test for each test for successful operation and for expected errors.
-    """
 
 
 # Make the tests conveniently executable

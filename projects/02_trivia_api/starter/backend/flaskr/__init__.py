@@ -1,10 +1,13 @@
-import os
-from flask import Flask, request, abort, jsonify, redirect, url_for, json, flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-import random
-
 from models import setup_db, Question, Category, db
+import random
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import *
+import os
+from flask import (Flask, request,
+                   abort, jsonify, redirect,
+                   url_for, json)
+
 
 QUESTIONS_PER_PAGE = 10
 
@@ -46,7 +49,8 @@ def create_app(test_config=None):
                 'total_questions': len(formatted_questions),
                 'categories': formatted_categories
             })
-        if (request.method == 'POST' and request.args.get('search_term') is not None):
+        if (request.method == 'POST'
+                and request.args.get('search_term') is not None):
             search_term = request.args.get('search_term')
             response = Question.query.filter(
                 Question.question.contains(search_term)).all()
@@ -71,21 +75,28 @@ def create_app(test_config=None):
                 difficulty = request.args.get('difficulty')
                 category = request.args.get('category')
                 new_question = Question(
-                    question=question, answer=answer, difficulty=difficulty, category=category)
+                    question=question,
+                    answer=answer,
+                    difficulty=difficulty,
+                    category=category)
                 Question.insert(new_question)
-            except:
+            except DatabaseError:
                 db.session.rollback()
                 abort(422)
             finally:
                 db.session.close()
-                return jsonify({'question': question, 'answer': answer, 'difficulty': difficulty, 'category': category})
+                return jsonify({
+                    'question': question,
+                    'answer': answer,
+                    'difficulty': difficulty,
+                    'category': category})
 
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
         try:
             question = Question.query.get_or_404(question_id)
             Question.delete(question)
-        except:
+        except DatabaseError:
             db.session.rollback()
         finally:
             db.session.close()
@@ -127,7 +138,7 @@ def create_app(test_config=None):
         previous_questions = request.args.get('prev_questions').split(',')
         try:
             prev_questions = [int(q) for q in previous_questions]
-        except:
+        except typeError:
             abort(500)
             return jsonify({'success': False})
         if int(quiz_category) > 0:
