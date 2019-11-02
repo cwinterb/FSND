@@ -121,7 +121,7 @@ def create_app(test_config=None):
 
     @app.route('/categories/<int:category_id>/questions', methods=['GET'])
     def get_questions_by_category(category_id):
-        query = Question.query.filter_by(category=category_id).all()
+        query = Question.query.filter_by(category=str(category_id)).all()
         if len(query) == 0:
             abort(404)
         response = [question.format() for question in query]
