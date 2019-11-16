@@ -28,28 +28,29 @@ db_drop_and_create_all()
         or appropriate status code indicating reason for failure
 '''
 
-@app.route('/drinks', methods=['GET', 'POST'])
+@app.route('/drinks', methods=['GET'])
 def get_drinks():
-    if request.method == 'GET':
-        drinks = Drink.query.all()
-        drinks_short = [drinks.short() for drink in drinks]
-        return jsonify({
-            'success': True,
-            'drinks': drinks_short,
-            'code': 200
-        })
-    if request.method == 'POST':
-        req_data = request.get_json()
-        print(req_data)
-        title = req_data.get('title', None)
-        recipe = req_data.get('recipe', None)
-        drink = Drink(title=title, recipe=recipe)
-        drink.insert()
-        drink = drink.long()
-        return jsonify({
-            'success': True,
-            'drink': drink
-        })    
+    drinks = Drink.query.all()
+    drinks_short = [drink.short() for drink in drinks]
+    return jsonify({
+        'success': True,
+        'drinks': drinks_short,
+        'code': 200
+    })
+
+@app.route('/drinks', methods=['POST'])  
+def new_drink():      
+    req_data = request.get_json()
+    print(req_data)
+    title = req_data.get('title', None)
+    recipe = req_data.get('recipe', None)
+    drink = Drink(title=title, recipe=json.dumps(recipe) )
+    drink.insert()
+    drink = drink.long()
+    return jsonify({
+        'success': True,
+        'drink': drink
+    })    
 
 '''
 @DONE implement endpoint
