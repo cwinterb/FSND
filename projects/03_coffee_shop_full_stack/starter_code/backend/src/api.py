@@ -12,15 +12,15 @@ setup_db(app)
 CORS(app)
 
 '''
-@TODO uncomment the following line to initialize the datbase
+@DONE uncomment the following line to initialize the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
-# db_drop_and_create_all()
+db_drop_and_create_all()
 
 ## ROUTES
 '''
-@TODO implement endpoint
+@DONE implement endpoint
     GET /drinks
         it should be a public endpoint
         it should contain only the drink.short() data representation
@@ -28,17 +28,37 @@ CORS(app)
         or appropriate status code indicating reason for failure
 '''
 
+@app.route('/drinks', methods=['GET', 'POST'])
+def get_drinks():
+    if request.method == 'GET':
+        drinks = Drink.query.all()
+        drinks_short = [drinks.short() for drink in drinks]
+        return jsonify({
+            'success': True,
+            'drinks': drinks_short,
+            'code': 200
+        })
+    if request.method == 'POST':
+        req_data = request.get_json()
+        print(req_data)
+        title = req_data.get('title', None)
+        recipe = req_data.get('recipe', None)
+        drink = Drink(title=title, recipe=recipe)
+        drink.insert()
+        drink = drink.long()
+        return jsonify({
+            'success': True,
+            'drink': drink
+        })    
 
 '''
-@TODO implement endpoint
+@DONE implement endpoint
     GET /drinks-detail
         it should require the 'get:drinks-detail' permission
         it should contain the drink.long() data representation
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-
-
 '''
 @TODO implement endpoint
     POST /drinks
@@ -48,7 +68,16 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
-
+# needs to require permissions
+@app.route('/drinks-detail', methods=['GET'])
+def get_drink_detail():
+    drinks = Drink.query.all()
+    drinks_long = [drinks.long() for drink in drinks]
+    return jsonify({
+        'success': True,
+        'drinks': drinks_long,
+        'code': 200
+    })
 
 '''
 @TODO implement endpoint
