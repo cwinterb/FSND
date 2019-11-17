@@ -46,12 +46,10 @@ def get_drinks():
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
-# TODO: find valid auth token for testing
 @app.route('/drinks', methods=['POST']) 
 @requires_auth('post:drinks') 
-def new_drink():      
+def new_drink(token):      
     req_data = request.get_json()
-    print(req_data)
     title = req_data.get('title', None)
     recipe = req_data.get('recipe', None)
     drink = Drink(title=title, recipe=json.dumps(recipe) )
@@ -71,12 +69,11 @@ def new_drink():
         or appropriate status code indicating reason for failure
 '''
 
-# TODO: test auth requirement get:drinks-detail
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
-def get_drink_detail():
+def get_drink_detail(token):
     drinks = Drink.query.all()
-    drinks_long = [drinks.long() for drink in drinks]
+    drinks_long = [drink.long() for drink in drinks]
     return jsonify({
         'success': True,
         'drinks': drinks_long,
@@ -93,23 +90,19 @@ def get_drink_detail():
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
-# TODO: test auth requirement patch:drinks
 @app.route('/drinks/<int:id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def update_drink(id):
+def update_drink(token, id):
     req_data = request.get_json()
     try:
         drink = Drink.query.filter(Drink.id == id).one_or_none()
-        print(drink)
         drink.title = req_data.get('title', None)
-        print(drink.title)
-        # drink.recipe = req_data.get('recipe', None)
+        drink.recipe = json.dumps(req_data.get('recipe', None))
         drink.update()
         drink_long = [drink.long()]
     except:
         abort(404)
     finally:
-        print(drink)
         return jsonify({
         'success': True,
         'drinks': drink_long,
@@ -126,10 +119,9 @@ def update_drink(id):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-# TODO: test auth requirement
 @app.route('/drinks/<int:id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
-def delete_drink(id):
+def delete_drink(token, id):
     drink = Drink.query.filter(Drink.id == id).one_or_none()
     if drink is None:
         abort(404)
