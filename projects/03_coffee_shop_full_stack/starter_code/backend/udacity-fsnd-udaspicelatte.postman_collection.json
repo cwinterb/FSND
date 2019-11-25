@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e8ad44ee-7536-4901-913c-46e718d56d9f",
+		"_postman_id": "3e169635-fd32-499a-8f24-577e2823977a",
 		"name": "udacity-fsnd-udaspicelatte",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -123,8 +123,34 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJEVTNNak16UkVaR01ESkVNa1V6UXpsRFFrWXpSRUUxTVRjeVJUY3pOakkyTXpGRE9UQkdPUSJ9.eyJpc3MiOiJodHRwczovL2N3aW50ZXJiLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGNhMzM4ZDZjYzI4ZTBlN2JmMjJiNTAiLCJhdWQiOiJjb2ZmZWVzaG9wIiwiaWF0IjoxNTc0MDI2MDYxLCJleHAiOjE1NzQwMzMyNjEsImF6cCI6Ikc3YTJnUTFIRXlnNEVzRmdlQjlMczBRbHNCNWFQMUs4Iiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6ZHJpbmtzIiwiZ2V0OmRyaW5rcy1kZXRhaWwiLCJwYXRjaDpkcmlua3MiLCJwb3N0OmRyaW5rcyJdfQ.MLtU-arK_jRZ2-d0uX6tUOaSEVaI3LunTvMk6DruFO07kxkLXzoIqF2iW6Qu2aQFghf5wXficiv3jZq1VdikdC-gDMpg-y1vtPYQvuIGAN2wdVLtb8uCEa1V7pd9k9T75vOQU5bNE9x6fuH2gOnLtbF9GjTfkPwEEYGyw9I3faBzoSRbzbWtbo-F2T2O0TWeD0SBHsiA6_dHnPVhC63IyL8nTB_9A42bleup4SI5Sh5A5Sz_DZNUKtj4WNfjQcQ67TtBPhgsFguQNmdBApeqbjpMcdkFumqQH8kpaMdgKZMmQU8zC8hh59KQxb9M7YNec8CztRnTiD0qkXS84iD1CA",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\":\"new new title\",\n\t\"recipe\":[ \n      { \n         \"name\":\"green matcha\",\n         \"color\":\"green\",\n         \"parts\":2\n      }\n   ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{host}}/drinks/1",
 							"host": [
@@ -170,7 +196,8 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "barista",
@@ -259,18 +286,24 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik4wTkNOVEEzTWpaQ1FUa3lRMEl6TmtORk0wWXhRVFUwT1RFMFFVVkNSRUpDT1RBME1EUXpOUSJ9.eyJpc3MiOiJodHRwczovL3VkYWNpdHktZnNuZC5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDY3MTQ4MTQ0MTcwNjk3MTI4OTMiLCJhdWQiOlsiZGV2IiwiaHR0cHM6Ly91ZGFjaXR5LWZzbmQuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTU2MDg5MDE2MCwiZXhwIjoxNTYwODk3MzYwLCJhenAiOiJPSjVwQk9ZSURFa09FVFVmUWo1ajdsSDZFTFcwMkd1MCIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6ZHJpbmtzIiwiZ2V0OmRyaW5rcy1kZXRhaWwiXX0.j9ocW47_exQOkEa10ffh8eijGvrIMxnGRzCmbrXnfaN_8ULsgA7AnWYMtvP8RmPWvT9n8sReWnFuJajUHBUbnBO2GuJ4aM3-WDUBeJT0X_mpGUWs4lxaNTbIkWdiWPTsEiRnP3wT-dU_v3Olw2PB4UMajMIjSH-IdF2Y1CiJIOaM0gV44RGZRyRvj6C2_mOkMfoXxzw-HrVvTRCo1NcUPea5Bs04POni7azx-B7FstP_HLm0dEbbge4XbmovHwlIXknIoI8PbuGXeLBqE2hv8fErKFBuIykxzK0nErH5zSPCrkM-_9smb8TLGAH-E5j1KQb6SHDKtcV_QHnsUYFuXA",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"title\":\"test\", \"recipe\":[ { \"name\":\"blueberry\", \"color\":\"blue\", \"parts\":2 } ] }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{host}}/drinks",
 							"host": [
@@ -301,7 +334,23 @@
 					],
 					"request": {
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"title\":\"test\", \"recipe\":[ { \"name\":\"blueberry\", \"color\":\"blue\", \"parts\":2 } ] }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{host}}/drinks/1",
 							"host": [
@@ -353,7 +402,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik4wTkNOVEEzTWpaQ1FUa3lRMEl6TmtORk0wWXhRVFUwT1RFMFFVVkNSRUpDT1RBME1EUXpOUSJ9.eyJpc3MiOiJodHRwczovL3VkYWNpdHktZnNuZC5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDY3MTQ4MTQ0MTcwNjk3MTI4OTMiLCJhdWQiOlsiZGV2IiwiaHR0cHM6Ly91ZGFjaXR5LWZzbmQuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTU2MDg5MDE2MCwiZXhwIjoxNTYwODk3MzYwLCJhenAiOiJPSjVwQk9ZSURFa09FVFVmUWo1ajdsSDZFTFcwMkd1MCIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6ZHJpbmtzIiwiZ2V0OmRyaW5rcy1kZXRhaWwiXX0.j9ocW47_exQOkEa10ffh8eijGvrIMxnGRzCmbrXnfaN_8ULsgA7AnWYMtvP8RmPWvT9n8sReWnFuJajUHBUbnBO2GuJ4aM3-WDUBeJT0X_mpGUWs4lxaNTbIkWdiWPTsEiRnP3wT-dU_v3Olw2PB4UMajMIjSH-IdF2Y1CiJIOaM0gV44RGZRyRvj6C2_mOkMfoXxzw-HrVvTRCo1NcUPea5Bs04POni7azx-B7FstP_HLm0dEbbge4XbmovHwlIXknIoI8PbuGXeLBqE2hv8fErKFBuIykxzK0nErH5zSPCrkM-_9smb8TLGAH-E5j1KQb6SHDKtcV_QHnsUYFuXA",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJEVTNNak16UkVaR01ESkVNa1V6UXpsRFFrWXpSRUUxTVRjeVJUY3pOakkyTXpGRE9UQkdPUSJ9.eyJpc3MiOiJodHRwczovL2N3aW50ZXJiLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGNhMzM2N2MyN2Y2YTBlOTI1YjUzOGQiLCJhdWQiOiJjb2ZmZWVzaG9wIiwiaWF0IjoxNTc0NjQyMjM3LCJleHAiOjE1NzQ2NDk0MzcsImF6cCI6Ikc3YTJnUTFIRXlnNEVzRmdlQjlMczBRbHNCNWFQMUs4Iiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6ZHJpbmtzLWRldGFpbCJdfQ.pn0oWV0BBwnbyBqjdPEyUywewHTS29uQ6N6384ESc8WMsO0eBa3MQ-cvY9v_5WBTfX_mSUv_1UYpnh4QJVFSF7ULoGApwRNuwMQC5XIQ-0TaqRM3QFNE3UCCxJ_mlBBdSIqOJUuxJG15kO70CWBlvPiJCw_oLt2ViBWhNA9EgFlNMjgULAPLzhmq0jJqX3xNxkggFwb7luj-EP4eDZymWHLHlEpWYWKLVb3usb3Sx4yZ7phH3gkzLMK2XfqBi_K6MNT523toeXPE-EuZcgjZNN2mjAgW9GNTIyWF1BGFCqw7YJF8bP9A97nAVUuPfD9MUEdnYRm2aPUXXE1SJj-stg",
 						"type": "string"
 					}
 				]
@@ -379,7 +428,8 @@
 						]
 					}
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "manager",
@@ -484,7 +534,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Water3\",\n    \"recipe\": {\n        \"name\": \"Water\",\n        \"color\": \"blue\",\n        \"parts\": 1\n    }\n}"
+							"raw": "{ \"title\":\"test\", \"recipe\":[ { \"name\":\"blueberry\", \"color\":\"blue\", \"parts\":2 } ] }"
 						},
 						"url": {
 							"raw": "{{host}}/drinks",
@@ -584,7 +634,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik4wTkNOVEEzTWpaQ1FUa3lRMEl6TmtORk0wWXhRVFUwT1RFMFFVVkNSRUpDT1RBME1EUXpOUSJ9.eyJpc3MiOiJodHRwczovL3VkYWNpdHktZnNuZC5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDY3MTQ4MTQ0MTcwNjk3MTI4OTMiLCJhdWQiOlsiZGV2IiwiaHR0cHM6Ly91ZGFjaXR5LWZzbmQuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTU2MDg4OTU5NiwiZXhwIjoxNTYwODk2Nzk2LCJhenAiOiJPSjVwQk9ZSURFa09FVFVmUWo1ajdsSDZFTFcwMkd1MCIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6ZHJpbmtzIiwiZ2V0OmRyaW5rcyIsImdldDpkcmlua3MtZGV0YWlsIiwicGF0Y2g6ZHJpbmtzIiwicG9zdDpkcmlua3MiXX0.Qk-5FC2X_RUkK00WKARYCKw_877XFuaT5ND3f3ObD9Ly1e1GMfJXhi3McV12binGGCw6x241erIjGB0t8WbWdU3bYpIVD1klZ64DVLQ8Q2LQ2NzB3eFEOgGLL85az1jIDbRiuATIRbbBOWILPJ6h6KR9L5hExklf2zuj3Bnwm7zMRmVpIJmjrUt4bWjtTOguOwJ0IVQsk4PDjGxzwfrUWFCFNDqN_u15JNLxeH21C-QvCpHs3D4Aodeh1qFUuWHfK_Gyfu91AitXPTVZRX9eZbUOVkGT3JMn4sKn9oGaKFTx2E-Y4DmoECG0uWImbX_wiRjx4aTeo7Q7hKSReMToPA",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJEVTNNak16UkVaR01ESkVNa1V6UXpsRFFrWXpSRUUxTVRjeVJUY3pOakkyTXpGRE9UQkdPUSJ9.eyJpc3MiOiJodHRwczovL2N3aW50ZXJiLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGNhMzM4ZDZjYzI4ZTBlN2JmMjJiNTAiLCJhdWQiOiJjb2ZmZWVzaG9wIiwiaWF0IjoxNTc0NjQwODk5LCJleHAiOjE1NzQ2NDgwOTksImF6cCI6Ikc3YTJnUTFIRXlnNEVzRmdlQjlMczBRbHNCNWFQMUs4Iiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6ZHJpbmtzIiwiZ2V0OmRyaW5rcy1kZXRhaWwiLCJwYXRjaDpkcmlua3MiLCJwb3N0OmRyaW5rcyJdfQ.rfRZsj5P7t7toYgzhKs5y_gzcPysq9QYS85QFzOwxi8rhLRNQu7F1-5UWrnJ-Jnm9aeUu5_FX_nY-1Uj8X9wNXV0oDQsF9Q1fhuvaY02ozI2Va9DyGZY9hEJ59DTrR7YGlCd5Cg9FRWAm_U5Lk_9lWcCqOs8RJ3Zr5R8gYa3C5BFJzofGefsJBgoT_F93ymbpI1QPxmtLbn0oznFU7vpC3u4-kHnPhVTcEZFo7tT7UcmOSK5HDh6RgnV7B7SXwSKb1gCY_RKTT7Fys2ELEndL4bFGxZOECr267v3TpJqN5EYdA2hSdrzzk9bF74kbCGq0IubpxqYclVwBfxA-RhRig",
 						"type": "string"
 					}
 				]
@@ -610,7 +660,8 @@
 						]
 					}
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"event": [
@@ -642,5 +693,6 @@
 			"value": "localhost:5000",
 			"type": "string"
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }

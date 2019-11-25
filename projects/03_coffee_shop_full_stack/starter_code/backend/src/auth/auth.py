@@ -57,19 +57,18 @@ def check_permissions(permission, payload):
         raise AuthError({
             'code': 'permission_denied',
             'description': 'you do not have permissions'
-        }, 403)
+        }, 401)
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'permission_denied',
             'description': 'you do not have permissions'
-        }, 403)
+        }, 401)
     else:
         return True
 
 
 def verify_decode_jwt(token):
-    jsonurl = urlopen(f'''https://{AUTH0_DOMAIN}/
-                        .well-known/jwks.json''')
+    jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)
     rsa_key = {}
@@ -121,7 +120,6 @@ def verify_decode_jwt(token):
                 'description': 'Unable to find the appropriate key.'
     }, 400)
 
-
 def requires_auth(permissions=''):
     def requires_auth_decorator(f):
         @wraps(f)
@@ -129,15 +127,15 @@ def requires_auth(permissions=''):
             try:
                 token = get_token_auth_header()
             except:
-                abort(403, "not authorized")
+                abort(401, "not authorized")
             try:
                 payload = verify_decode_jwt(token)
             except:
-                abort(401, "cannot decode token")
+                abort(403, "cannot decode token")
             try:
                 check_permissions(permissions, payload)
             except:
-                abort(403, "you do not have permissions")
+                abort(401, "you do not have permissions")
             return f(payload, *args, **kwargs)
         return wrapper
     return requires_auth_decorator

@@ -105,10 +105,10 @@ def not_found(error):
     }), 404
 
 
-@app.errorhandler(401)
+@app.errorhandler(403)
 def not_authorized(error):
     return jsonify({
         "success": False,
-        "error": 401,
+        "error": 403,
         "message": "not authorized"
-    }), 401
+    }), 403
