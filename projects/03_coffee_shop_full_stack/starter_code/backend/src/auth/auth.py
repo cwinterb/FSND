@@ -120,6 +120,15 @@ def verify_decode_jwt(token):
                 'description': 'Unable to find the appropriate key.'
     }, 400)
 
+"""
+The requires_auth decorator, when applied to an endpoint,
+will get the user's auth token, decode it, check that
+the user has the required permissions to execute that
+endpoint and performs the appropriate error handling when
+user does not have required permissions or when there
+is an error decoding the token. 
+"""
+
 def requires_auth(permissions=''):
     def requires_auth_decorator(f):
         @wraps(f)
