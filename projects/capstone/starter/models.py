@@ -34,6 +34,17 @@ class Project(db.Model):
     release_date = db.Column(
         db.DateTime, nullable=False, default=datetime.utcnow)
 
+    def format(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'release_date': self.release_date
+        }
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Actor(db.Model):
     __tablename__ = 'actor'
@@ -49,3 +60,7 @@ class Actor(db.Model):
             'age': self.age,
             'gender': self.gender
         }
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
