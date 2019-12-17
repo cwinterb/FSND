@@ -1,0 +1,17 @@
+{% extends 'main.html' %} {% block title %}The Agency | Project Search{%
+endblock %} {% block content %}
+<!-- <h3>
+    Number of search results for "{{ search_term }}": {{ results | length }}
+  </h3> -->
+<h3>All Projects</h3>
+<div class="list-group">
+  {% for project in projects %}
+  <a href="/projects/{{ project.id }}" class="list-group-item">
+    <h5>
+      <i class="fas fa-film"></i>{{' '}}{{ project.title }}{{' - Releasing:
+      '}}{{ project.release_date }}
+    </h5>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

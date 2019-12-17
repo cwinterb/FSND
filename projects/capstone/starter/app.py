@@ -21,14 +21,14 @@ def create_app(test_config=None):
     @app.route('/actors', methods=["GET", "POST"])
     def actors():
         if request.method == "GET":
-            # return render_template('pages/actors.html', actors=Actor.query.all())
-            actors = Actor.query.all()
-            actors_list = [actor.format() for actor in actors]
-            return jsonify({
-                'success': True,
-                'actors': actors_list,
-                'code': 200
-            })
+            return render_template('pages/actors.html', actors=Actor.query.all())
+            # actors = Actor.query.all()
+            # actors_list = [actor.format() for actor in actors]
+            # return jsonify({
+            #     'success': True,
+            #     'actors': actors_list,
+            #     'code': 200
+            # })
         if request.method == "POST":
             try:
                 name = request.args.get("name")
@@ -96,13 +96,14 @@ def create_app(test_config=None):
     @app.route('/projects', methods=["GET", "POST"])
     def projects():
         if request.method == "GET":
-            projects = Project.query.all()
-            projects_list = [project.format() for project in projects]
-            return jsonify({
-                'success': True,
-                'projects': projects_list,
-                'code': 200
-            })
+            return render_template('pages/projects.html', projects=Project.query.all())
+            # projects = Project.query.all()
+            # projects_list = [project.format() for project in projects]
+            # return jsonify({
+            #     'success': True,
+            #     'projects': projects_list,
+            #     'code': 200
+            # })
         if request.method == "POST":
             try:
                 title = request.args.get("title")
