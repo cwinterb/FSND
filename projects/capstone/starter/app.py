@@ -21,11 +21,19 @@ from auth import AuthError, requires_auth
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, resources={r"/api/": {"origins": "*"}})
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-    SECRET_KEY = os.urandom(32)
-    app.config['SECRET_KEY'] = SECRET_KEY
+    # SECRET_KEY = os.urandom(32)
+    # app.config['SECRET_KEY'] = SECRET_KEY
     setup_db(app)
+
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Headers',
+                             'Content-Type, Authorization, true')
+        response.headers.add('Access-Control-Allow-Methods',
+                             'GET, PATCH, POST, DELETE, OPTIONS')
+        return response
 
 #----------------------------------------------------------------------------#
 # Endpoints

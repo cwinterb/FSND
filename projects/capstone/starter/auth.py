@@ -22,7 +22,7 @@ class AuthError(Exception):
 
 
 def get_token_auth_header():
-    print(request.__dict__)
+    print(request.form.get('authorization'))
     auth = request.headers.get('Authorization', None)
     print(auth)
     if not auth:
