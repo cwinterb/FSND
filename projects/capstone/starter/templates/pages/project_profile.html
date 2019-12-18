@@ -1,0 +1,30 @@
+{% extends 'main.html' %} {% block title %}{{ project.title }} | Project{%
+endblock %} {% block content %}
+<div class="row">
+  <div class="col-sm-6">
+    <h1 class="monospace">
+      {{ project.title }}
+    </h1>
+    <p class="subtitle">ID: {{ project.id }}</p>
+    <p>
+      <i class="fas fa-globe-americas"></i> {{'Title: '}}{{ project.title }}
+    </p>
+    <p>
+      <i class="fas fa-globe-americas"></i> {{'Release date: '}}{{
+      project.release_date }}
+    </p>
+  </div>
+</div>
+
+<section>
+  <form action="/projects/{{project.id}}/edit" method="GET">
+    <input type="submit" class="btn btn-warning" value="Edit Profile" />
+  </form>
+</section>
+
+<section>
+  <form action="/projects/{{project.id}}/delete" method="POST">
+    <input type="submit" class="btn btn-danger" value="Delete Profile" />
+  </form>
+</section>
+{% endblock %}

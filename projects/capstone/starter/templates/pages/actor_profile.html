@@ -1,0 +1,27 @@
+{% extends 'main.html' %} {% block title %}{{ actor.name }} | Actor{% endblock
+%} {% block content %}
+<div class="row">
+  <div class="col-sm-6">
+    <h1 class="monospace">
+      {{ actor.name }}
+    </h1>
+    <p class="subtitle">ID: {{ actor.id }}</p>
+    <p>
+      <i class="fas fa-globe-americas"></i> {{'Gender: '}}{{ actor.gender }}
+    </p>
+    <p><i class="fas fa-globe-americas"></i> {{'Age: '}}{{ actor.age }}</p>
+  </div>
+</div>
+
+<section>
+  <form action="/actors/{{actor.id}}/edit" method="GET">
+    <input type="submit" class="btn btn-warning" value="Edit Profile" />
+  </form>
+</section>
+
+<section>
+  <form action="/actors/{{actor.id}}" method="POST">
+    <input type="submit" class="btn btn-danger" value="Delete Profile" />
+  </form>
+</section>
+{% endblock %}

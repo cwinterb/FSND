@@ -1,0 +1,28 @@
+{% extends 'main.html' %} {% block title %}Edit Actor{% endblock %} {% block
+content %}
+<div class="form-wrapper">
+  <form class="form" method="POST" action="/actors/{{ actor.id }}/edit">
+    <h3 class="form-heading">Edit actor <em>{{ actor.name }}</em></h3>
+    <div class="form-group">
+      <label for="name">Name</label>
+      {{ form.name(value = actor.name, class_ = 'form-control', autofocus =
+      true, placeholder='Actor Name' ) }}
+    </div>
+    <div class="form-group">
+      <label for="gender">Gender</label>
+      {{ form.gender(value = actor.gender, class_ = 'form-control', autofocus =
+      true, placeholder='Gender' ) }}
+    </div>
+    <div class="form-group">
+      <label for="age">Age</label>
+      {{ form.age(value = actor.age, class_ = 'form-control', autofocus = true,
+      placeholder='Age' ) }}
+    </div>
+    <input
+      type="submit"
+      value="Edit Artist"
+      class="btn btn-primary btn-lg btn-block"
+    />
+  </form>
+</div>
+{% endblock %}
