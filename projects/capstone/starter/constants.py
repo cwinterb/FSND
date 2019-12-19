@@ -5,4 +5,4 @@ SQLALCHEMY_DATABASE_URI = 'postgres://carmellasouthward@localhost:5432/capstone'
 
 client_id = 'niAAnrxzVlTXC5J3K76pLItw8JiSj9LV'
 
-login_url = 'https://cwinterb.auth0.com/authorize?audience=agency&response_type=token&client_id=niAAnrxzVlTXC5J3K76pLItw8JiSj9LV&redirect_uri=http://localhost:8080'
+login_url = 'https://cwinterb.auth0.com/authorize?audience=agency&response_type=token&client_id=niAAnrxzVlTXC5J3K76pLItw8JiSj9LV&redirect_uri=http://localhost:8080/callback'

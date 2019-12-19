@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------------#
 
 import os
-from flask import Flask, request, abort, jsonify, render_template, redirect, url_for
+from flask import Flask, request, abort, jsonify, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import db, setup_db, Actor, Project
@@ -12,6 +12,12 @@ from flask_migrate import Migrate
 from flask_wtf import Form
 from forms import *
 from auth import AuthError, requires_auth
+import json
+from werkzeug.exceptions import HTTPException
+from authlib.flask.client import OAuth
+from six.moves.urllib.parse import urlencode
+
+# from authlib.flask.client import OAuth
 
 #----------------------------------------------------------------------------#
 # App configuration
@@ -23,9 +29,22 @@ def create_app(test_config=None):
     app = Flask(__name__)
     CORS(app, resources={r"/api/": {"origins": "*"}})
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-    # SECRET_KEY = os.urandom(32)
-    # app.config['SECRET_KEY'] = SECRET_KEY
+    SECRET_KEY = os.urandom(32)
+    app.config['SECRET_KEY'] = SECRET_KEY
     setup_db(app)
+
+    oauth = OAuth(app)
+
+    auth0 = oauth.register(
+        'auth0',
+        client_id='niAAnrxzVlTXC5J3K76pLItw8JiSj9LV',
+        client_secret='ye3vSQcDIgwG0ZEttdWMf5rx6NgN3tQVhg_C3fqPE_OygzTepUxfomjDZsGK3h9O',
+        api_base_url='https://cwinterb.auth0.com',
+        access_token_url='https://cwinterb.auth0.com/oauth/token',
+        authorize_url='https://cwinterb.auth0.com/authorize',
+        client_kwargs={
+            'scope': 'openid profile email',
+        },)
 
     @app.after_request
     def after_request(response):
@@ -34,6 +53,21 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods',
                              'GET, PATCH, POST, DELETE, OPTIONS')
         return response
+
+    @app.route('/callback')
+    def callback_handling():
+        # Handles response from token endpoint
+        auth0.authorize_access_token()
+        resp = auth0.get('userinfo')
+        userinfo = resp.json()
+        # Store the user information in flask session.
+        session['jwt_payload'] = userinfo
+        session['profile'] = {
+            'user_id': userinfo['sub'],
+            'name': userinfo['name'],
+            'picture': userinfo['picture']
+        }
+        return redirect('/')
 
 #----------------------------------------------------------------------------#
 # Endpoints
@@ -50,7 +84,8 @@ def create_app(test_config=None):
 
     @app.route('/login')
     def login():
-        return redirect(login_url)
+        # return redirect(login_url)
+        return auth0.authorize_redirect(redirect_uri='http://localhost:8080/callback')
 
 #----------------------------------------------------------------------------#
 # Actors Endpoints
@@ -67,11 +102,8 @@ def create_app(test_config=None):
     def post_actor(token):
         try:
             name = request.form.get("name")
-            print(name)
             age = request.form.get("age")
-            print(age)
             gender = request.form.get("gender")
-            print(gender)
             new_actor = Actor(name=name, age=age, gender=gender)
             db.session.add(new_actor)
             db.session.commit()
@@ -102,21 +134,14 @@ def create_app(test_config=None):
     def edit_actor(token, id):
         try:
             actor = Actor.query.filter_by(id=id).first()
-            print(actor)
             actor.name = request.form.get("name")
-            print(actor.name)
             actor.age = request.form.get("age")
-            print(actor.age)
             actor.gender = request.form.get("gender")
-            print(actor.gender)
-            print(actor.__dict__)
             db.session.commit()
         except:
-            print("database error")
             db.session.rollback()
             abort(422)
         finally:
-            print(actor.__dict__)
             db.session.close()
             return redirect(url_for('actors'))
 
@@ -127,7 +152,6 @@ def create_app(test_config=None):
         if request.method == "POST":
             try:
                 actor = Actor.query.filter(Actor.id == id).one_or_none()
-                print(actor)
                 if actor is None:
                     return jsonify({"message": "actor not found"})
                 actor.delete()
@@ -150,7 +174,6 @@ def create_app(test_config=None):
 #----------------------------------------------------------------------------#
 # Projects Endpoints
 #----------------------------------------------------------------------------#
-    # TODO: add auth decorators to projects endpoints
     # get all projects and post a new project
     @app.route('/projects', methods=["GET"])
     @requires_auth('get:projects')
@@ -160,14 +183,11 @@ def create_app(test_config=None):
         if request.method == "POST":
             try:
                 title = request.form.get("title")
-                print(title)
                 release_date = request.form.get("release_date")
-                print(release_date)
                 new_project = Project(title=title, release_date=release_date)
                 db.session.add(new_project)
                 db.session.commit()
             except:
-                print("there was an error")
                 db.session.rollback()
                 abort(422)
             finally:
@@ -180,7 +200,6 @@ def create_app(test_config=None):
     def delete_project(token, id):
         try:
             project = Project.query.filter(Project.id == id).one_or_none()
-            print(project)
             if project is None:
                 return jsonify({"message": "project not found"})
             project.delete()
@@ -199,18 +218,13 @@ def create_app(test_config=None):
     def update_project(token, id):
         try:
             project = Project.query.filter_by(id=id).first()
-            print(project)
             project.title = request.args.get("title")
-            print(project.title)
             project.release_date = request.args.get("release_date")
-            print(project.release_date)
             db.session.commit()
         except:
-            print("database error")
             db.session.rollback()
             abort(422)
         finally:
-            print(project.__dict__)
             db.session.close()
             return redirect(url_for('projects'))
 
