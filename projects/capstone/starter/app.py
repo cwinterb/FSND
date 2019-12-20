@@ -22,11 +22,12 @@ from six.moves.urllib.parse import urlencode
 #----------------------------------------------------------------------------#
 # App configuration
 #----------------------------------------------------------------------------#
+app = Flask(__name__)
 
 
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__)
+
     CORS(app, resources={r"/api/": {"origins": "*"}})
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
     SECRET_KEY = os.urandom(32)
